@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>{{ topic.name }}</h1>
+
+{% if answered %}
+    <!-- The student has just answered, so show whether they were right. -->
+    <div class="card">
+        <p class="question-text">{{ question.question_text }}</p>
+
+        {% if was_correct %}
+            <p class="feedback correct">Correct.</p>
+        {% else %}
+            <p class="feedback wrong">
+                Not quite. You chose {{ chosen_option }}.
+                The correct answer was {{ correct_option }}: {{ correct_text }}.
+            </p>
+        {% endif %}
+
+        <a class="button" href="{{ url_for('quiz', topic_id=topic.id) }}">
+            Next question &rarr;
+        </a>
+        <a class="button secondary" href="{{ url_for('student_dashboard') }}">
+            Back to topics
+        </a>
+    </div>
+
+{% else %}
+    <!-- Show a fresh question for the student to answer. -->
+    <form method="POST" action="{{ url_for('quiz', topic_id=topic.id) }}" class="card">
+        <p class="question-text">{{ question.question_text }}</p>
+        <input type="hidden" name="question_id" value="{{ question.id }}">
+
+        <label class="option">
+            <input type="radio" name="chosen_option" value="A"> {{ question.option_a }}
+        </label>
+        <label class="option">
+            <input type="radio" name="chosen_option" value="B"> {{ question.option_b }}
+        </label>
+        <label class="option">
+            <input type="radio" name="chosen_option" value="C"> {{ question.option_c }}
+        </label>
+        <label class="option">
+            <input type="radio" name="chosen_option" value="D"> {{ question.option_d }}
+        </label>
+
+        <button type="submit">Submit answer</button>
+    </form>
+{% endif %}
+
+{% endblock %}

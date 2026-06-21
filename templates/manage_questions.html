@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Questions</h1>
+
+<h2>Add a question</h2>
+<form method="POST" action="{{ url_for('manage_questions') }}" class="card form">
+    <label for="topic_id">Topic</label>
+    <select id="topic_id" name="topic_id">
+        {% for topic in topics %}
+            <option value="{{ topic.id }}">{{ topic.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="question_text">Question</label>
+    <input type="text" id="question_text" name="question_text">
+
+    <label for="option_a">Option A</label>
+    <input type="text" id="option_a" name="option_a">
+
+    <label for="option_b">Option B</label>
+    <input type="text" id="option_b" name="option_b">
+
+    <label for="option_c">Option C</label>
+    <input type="text" id="option_c" name="option_c">
+
+    <label for="option_d">Option D</label>
+    <input type="text" id="option_d" name="option_d">
+
+    <label for="correct_option">Correct option</label>
+    <select id="correct_option" name="correct_option">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+    </select>
+
+    <label for="difficulty">Difficulty (1 easy – 3 hard)</label>
+    <select id="difficulty" name="difficulty">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+    </select>
+
+    <button type="submit">Add question</button>
+</form>
+
+<h2>Existing questions</h2>
+{% if questions %}
+    <table class="results-table">
+        <tr>
+            <th>Topic</th>
+            <th>Question</th>
+            <th>Correct</th>
+        </tr>
+        {% for question in questions %}
+            <tr>
+                <td>{{ question.topic.name }}</td>
+                <td>{{ question.question_text }}</td>
+                <td>{{ question.correct_option }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No questions yet. Add the first one above.</p>
+{% endif %}
+
+{% endblock %}

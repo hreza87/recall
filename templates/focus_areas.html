@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Your focus areas</h1>
+<p class="hint">Weakest topics first. These are the ones to revise next.</p>
+
+{% if focus_list %}
+    <table class="results-table">
+        <tr>
+            <th>Topic</th>
+            <th>Score</th>
+            <th>Questions answered</th>
+        </tr>
+        {% for item in focus_list %}
+            <tr>
+                <td>{{ item.topic_name }}</td>
+                <td>{{ item.percentage }}%</td>
+                <td>{{ item.number_answered }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>You have not answered any questions yet. Start revising to see your focus areas.</p>
+{% endif %}
+
+{% endblock %}

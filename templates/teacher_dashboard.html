@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Class dashboard</h1>
+
+<h2>Class average per topic</h2>
+<div class="card">
+    <!-- The chart is drawn by Chart.js, loaded from the internet below. -->
+    <canvas id="averagesChart" height="120"></canvas>
+</div>
+
+<h2>Each student</h2>
+{% if student_rows %}
+    <table class="results-table">
+        <tr>
+            <th>Student</th>
+            {% for topic in topics %}
+                <th>{{ topic.name }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in student_rows %}
+            <tr>
+                <td>{{ row.username }}</td>
+                {% for score in row.topic_scores %}
+                    {% if score.number_answered > 0 %}
+                        <td>{{ score.percentage }}%</td>
+                    {% else %}
+                        <td class="muted">—</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No students have registered yet.</p>
+{% endif %}
+
+<!-- Load the chart library, then draw the bar chart using the data Flask
+     passed in. The "| tojson" filter safely turns the Python lists into
+     JavaScript. -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var topicNames = {{ topic_names | tojson }};
+    var topicAverages = {{ topic_averages | tojson }};
+
+    var chartCanvas = document.getElementById("averagesChart");
+    new Chart(chartCanvas, {
+        type: "bar",
+        data: {
+            labels: topicNames,
+            datasets: [{
+                label: "Class average (%)",
+                data: topicAverages,
+                backgroundColor: "#0f766e"
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true, max: 100 }
+            }
+        }
+    });
+</script>
+
+{% endblock %}
